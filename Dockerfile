@@ -1,19 +1,19 @@
 FROM alpine:3.20
 
-# Install tools needed to download gost
-RUN apk add --no-cache wget ca-certificates
+# Tools to download and extract gost
+RUN apk add --no-cache wget ca-certificates tar
 
-# Download prebuilt gost binary (linux amd64)
-# If this version ever breaks, you can change v2.11.5 to a newer one from:
-# https://github.com/ginuerzh/gost/releases
-RUN wget -O /usr/local/bin/gost \
-    https://github.com/ginuerzh/gost/releases/download/v2.11.5/gost-linux-amd64-2.11.5 && \
-    chmod +x /usr/local/bin/gost
+# Download prebuilt gost binary for linux amd64 (v2.12.0)
+RUN wget https://github.com/ginuerzh/gost/releases/download/v2.12.0/gost_2.12.0_linux_amd64.tar.gz && \
+    tar -zxvf gost_2.12.0_linux_amd64.tar.gz && \
+    mv gost /usr/local/bin/gost && \
+    chmod +x /usr/local/bin/gost && \
+    rm gost_2.12.0_linux_amd64.tar.gz
 
-# Add non-root user
+# Non-root user
 RUN adduser -D -u 1000 app
 
-# Copy start script
+# Your start script
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
